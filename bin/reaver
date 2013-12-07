@@ -1,0 +1,145 @@
+#!/usr/bin/env node
+
+/* Keep the hash bang at the top so we know this is a node script. */
+
+
+/*
+ * All of the variables used by this file are listed together here at the top.
+ * We import code for parsing arguments, specify a version number, get a list
+ * of the arguments passed in to the command line, and create some usage
+ * documentation.
+ */
+var argParse = require('../lib/argparser').parse,
+    appmeta  = require('../lib/appmeta'),
+    api      = require('../main'),
+    path     = require('path'),
+    bashArgs = process.argv.slice(2),
+    usage    = appmeta.help,
+    version  = [
+        '/**********************************'
+      , ' * ' + appmeta.version
+      , ' **********************************/'
+    ].join('\n'),
+    args,
+    actions;
+
+/*
+ * Create an interface for the API.
+ */
+actions = {
+  /*
+   * Call the build function from the API.
+   */
+  "build" : function (argObj) {
+    api.build(path.resolve(argObj['-d'][0]));
+  },
+
+  /*
+   * Call the spawn function from the API.
+   */
+  "spawn" : function (argObj) {
+    api.spawn(path.resolve(argObj['-d'][0]), argObj['-n'][0]);
+  },
+
+  /*
+   * Call the server object from the API.
+   */
+  "server" : function (argObj) {
+    api.server({
+      "dir"        : path.resolve(argObj['-d'][0]),
+      "port"       : argObj['-p'][0],
+      "dsHost"     : argObj['--dsh'][0],
+      "dsPort"     : argObj['--dsp'][0],
+      "dsTriggers" : argObj['--dst'][0]
+    });
+  }
+};
+
+/*
+ * Parse arguments that came in from the command line.
+ * See lib/argparser.js for usage details.
+ */
+args = argParse(bashArgs, [
+  ['-v', '--version'],
+  ['-h', '--help'],
+  ['-d', '--directory'],
+  ['-n', '--name'],
+  ['-p', '--port']
+]);
+
+/*
+ * Determine what to do based on the arguments we have.
+ */
+
+/*
+ * Display version number.
+ */
+if (args['-v']) {
+  console.log(version);
+  process.exit(0);
+}
+
+/*
+ * Display help info.
+ */
+if (args['-h']) {
+  console.log(usage);
+  process.exit(0);
+}
+
+/*
+ * Make sure we have specified a directory to work in.
+ */
+args['-d'] = args['-d'] || [];
+if (!args['-d'][0]) {
+  args['-d'][0] = './';
+}
+
+/*
+ * Make sure we have a port argument.
+ */
+args['-p'] = args['-p'] || [];
+
+/*
+ * Make sure we have a name argument.
+ */
+args['-n'] = args['-n'] || [];
+
+/*
+ * Make sure we have datastore arguments.
+ */
+args['--dsh'] = args['--dsh'] || [];
+args['--dsp'] = args['--dsp'] || [];
+args['--dst'] = args['--dst'] || [];
+
+
+/*
+ * If the user issued multiple commands, error out.
+ */
+if (!args._noflag || args._noflag.length !== 1) {
+  console.log('Please specify 1 action for the reaver command.  No more, no less.');
+  process.exit(1);
+}
+
+/*
+ * Call the appropriate API function based on the user's specified action.
+ */
+actions[args._noflag[0]](args);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
