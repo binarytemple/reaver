@@ -4,3 +4,4 @@
 */node_modules
 .reaver_cache
 */.reaver_cache
+npm-debug.log
