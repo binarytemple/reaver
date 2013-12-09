@@ -21,7 +21,8 @@
     "jade"               : ">=0.30.0",
     "wrench"             : ">=1.5.1",
     "browser-request"    : ">=0.2.1",
-    "ws"                 : ">=0.4.31"
+    "ws"                 : ">=0.4.31",
+    "simple-github"      : ">=0.1.0"
   },
   
   "repository"   : {
