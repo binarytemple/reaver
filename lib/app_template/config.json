@@ -1,0 +1,8 @@
+{
+  "ignore": [".gitignore", "README.md"],
+  "dev": {
+    "dsTrigger": {},
+    "dsHost": "127.0.0.1",
+    "dsPort": "5984"
+  }
+}
